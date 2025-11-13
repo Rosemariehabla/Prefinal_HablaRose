@@ -1,39 +1,48 @@
-import React from "react";
-
-export default function CartDetails({ cart }) {
-  if (cart.length === 0) return null;
-
-  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+export default function CartDetails({ cart, onRemove }) {
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="mt-5">
-      <h4>🛒 Cart Details</h4>
-      <table className="table table-bordered table-striped">
-        <thead className="table-dark">
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cart.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>₱{item.price.toLocaleString()}</td>
-              <td>{item.quantity}</td>
-              <td>₱{(item.price * item.quantity).toLocaleString()}</td>
+    <div className="mb-4">
+      <h3>Cart Summary</h3>
+      {cart.length === 0 ? (
+        <p>No items in cart.</p>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan="3" className="text-end"><strong>Total Amount</strong></td>
-            <td><strong>₱{totalAmount.toLocaleString()}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
+          </thead>
+          <tbody>
+            {cart.map((item) => (
+              <tr key={item.id}>
+                <td>{item.name}</td>
+                <td>₱{item.price.toLocaleString()}</td>
+                <td>{item.quantity}</td>
+                <td>₱{(item.price * item.quantity).toLocaleString()}</td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => onRemove(item.id)}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="table-primary">
+              <td colSpan="4" className="fw-bold">Total</td>
+              <td>₱{total.toLocaleString()}</td>
+            </tr>
+          </tfoot>
+        </table>
+      )}
     </div>
   );
 }
